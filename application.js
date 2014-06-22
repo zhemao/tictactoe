@@ -3,11 +3,104 @@
  * should go in here.
  */
 
+var X = -1;
+var O = 1;
+var E = 0;
+
+var grid = [[E, E, E], [E, E, E], [E, E, E]];
+
+var player = X;
+var gamewon = false;
+
+function playerString(val) {
+    return (val === X) ? "X" : "O";
+}
+
+function fillCell(r, c, val) {
+    grid[r][c] = val;
+    $("#" + r + "" + c).text(playerString(val));
+}
+
+function hasWon(r, c) {
+    // check the row
+    if (grid[r][0] === grid[r][1] && grid[r][1] === grid[r][2]) {
+        return true;
+    }
+
+    // check the column
+    if (grid[0][c] === grid[1][c] && grid[1][c] === grid[2][c]) {
+        return true;
+    }
+
+    // check the diagonal starting at top left
+    if (r === c && grid[0][0] === grid[1][1] && grid[1][1] === grid[2][2]) {
+        return true;
+    }
+
+    // check that the cell is in the other diagonal
+    if ((2 - r) != c) {
+        return false;
+    }
+
+    // check the other diagonal
+    return grid[0][2] === grid[1][1] && grid[1][1] === grid[2][0];
+}
+
+function isDraw() {
+    for (var r = 0; r < grid.length; r++) {
+        for (var c = 0; c < grid[r].length; c++) {
+            if (grid[r][c] === E) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+function handle_click(ev) {
+    if (gamewon) {
+        return;
+    }
+
+    // clear the error message
+    $("#error-message").text("");
+
+    // get the row and column out of the id
+    var id = ev.target.id;
+    var r = parseInt(id[0]);
+    var c = parseInt(id[1]);
+
+    // make sure that the cell is empty
+    if (grid[r][c] != E) {
+        $("#error-message").text("Cell is not empty");
+        return;
+    }
+
+    // fill the cell
+    fillCell(r, c, player);
+    // check if the player has just won
+    if (hasWon(r, c)) {
+        $("#status-message").text(
+                "Player " + playerString(player) + " has won");
+        gamewon = true;
+        return;
+    }
+    if (isDraw()) {
+        $("#status-message").text("It's a draw");
+        gamewon = true;
+        return;
+    }
+    player *= -1;
+}
+
 function setup() {
     // This function will be run once at the beginning
     // Put any one-time setup code here.
-    // For now, it just logs "Hello, World!" to the dev console.
-    console.log("Hello, World!");
+    for (var r = 0; r < grid.length; r++) {
+        for (var c = 0; c < grid[r].length; c++) {
+            $("#" + r + "" + c).click(handle_click);
+        }
+    }
 }
 
 // This tells the browser to run the "setup" function once the HTML document
