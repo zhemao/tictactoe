@@ -3,8 +3,17 @@
  * an HTML document.
  */
 
-/* This selector matches the body element. Adding stuff inside the brackets
- * will change the appearance of the body element.
+/* This selector matches the element with the id "example".
+ * Adding stuff inside the brackets will change the appearance of that element.
  */
-body {
+#example {
+  /* As an example, let's change the font size and color
+   * of the text inside the element
+   */
+  color: #ff0000; /* This is the color red */
+  /* You can use many different units to specify font-size.
+   * We will use "pt", which is the units you are used to thinking of
+   * font sizes in.
+   */
+  font-size: 18pt;
 }

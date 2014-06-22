@@ -4,8 +4,12 @@
  */
 
 function setup() {
-    // Put any setup code (code that only runs in the very beginning) here.
+    // This function will be run once at the beginning
+    // Put any one-time setup code here.
+    // For now, it just logs "Hello, World!" to the dev console.
     console.log("Hello, World!");
 }
 
+// This tells the browser to run the "setup" function once the HTML document
+// is finished loading.
 $(document).ready(setup);
