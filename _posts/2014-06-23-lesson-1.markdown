@@ -1,0 +1,12 @@
+---
+title: Lesson 1
+layout: post
+---
+
+In this series of lessons, you will learn how to build a web-based Tic-Tac-Toe
+game, complete with AI opponent, using HTML, CSS, and Javascript.
+
+In each lesson, we will build a piece of the game until we have completed
+the final application.
+
+This lesson will focus on getting started and writing the basic HTML and CSS.
