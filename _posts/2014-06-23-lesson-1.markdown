@@ -10,3 +10,130 @@ In each lesson, we will build a piece of the game until we have completed
 the final application.
 
 This lesson will focus on getting started and writing the basic HTML and CSS.
+To begin, download the [starter package](https://github.com/zhemao/tictactoe/archive/tictactoe-starter.zip) and unzip it.
+
+The three main files in this package are index.html, style.css, and application.js,
+which are the ones you will be editing in order to build your application.
+Open up, the index.html file in your text editor (you will want to right click
+and choose "open with" or something similar, just double-clicking on the file
+will probably open it in the web browser).
+
+Right now the HTML file is pretty bare-bones. It should look something like this:
+
+```html
+    <!doctype html>
+    <html>
+        <head>
+            <title>Tic-Tac-Toe</title>
+            <link rel="stylesheet" href="style.css"/>
+        </head>
+        <body>
+            <p id="example">Hello, World!</p>
+            <script src="jquery.js"></script>
+            <script src="application.js"></script>
+        </body>
+    </html>
+```
+
+HTML consists of elements, which begin with a start tag that looks like
+`<tag>` and ends with a matching end tag, which looks like `</tag>`.
+Everything between the start and end tags is a "child" of the element.
+On the web page, it will be shown inside the "parent" element. Think of it
+as putting boxes within boxes.
+
+If an element does not have any children, it can be self-closing. That is,
+you will see a single tag that looks like `<tag/>`. This is equivalent to
+`<tag></tag>`.
+
+Elements can also have attributes, which look like `attr="value"`.
+These attributes give extra information about the element and its meaning.
+
+You will also see a bunch of stuff that I didn't show above that look like
+`<!-- a bunch of text -->`. These are comments. The browser ignores them
+when rendering an HTML page. They are there solely for other programmers
+to look at. Comments are important in order to help other programmers understand
+the code that you have written.
+
+The top-level element of an html page is always `<html>`. This element has
+two direct children, which are `<head>` and `<body>`. The head element
+contains extra information about the page, like `<title>`, which determines
+what gets shown in the browser's title bar, and `<link>`, which points to
+resources external to the web page. In this case, there is a single link
+pointing to our css file, which tells the browser to apply the CSS rules
+from that file to the web page. CSS is what determines what the elements
+in an HTML page look like. We will talk more about CSS later.
+You can see that this element has two attributes. The "rel" attribute has
+the value "stylesheet", which tells the browser that this link is to a
+CSS stylesheet. The second attribute is "href", which tells the browser
+where the CSS stylesheet is located, in this case, it is "style.css" in the
+same directory as the HTML page.
+
+The `<body>` element of an HTML page contains the actual content of the
+web page. This is where you will write most of your HTML. For now, there is a
+single paragraph (`<p>`) element, which contains the text "Hello, World!".
+If you open up index.html in your web browser, you will see that text in big
+red letters, as below.
+
+<p id="example">
+Hello, World!
+</p>
+
+In your text editor, try changing the text inside the paragraph element or
+adding another paragraph element before or after the existing one.
+You will need to refresh the page in your web browser in order to see any
+changes.
+
+You will notice at this point that only the text in the original paragraph
+element will be red. Text in other paragraphs that you create will show up
+black and in smaller font. Why is this? Well, remember what I said about CSS?
+Open up style.css in your text editor. You should see 
+
+```css
+#example {
+  color: #ff0000;
+  font-size: 18pt;
+}
+```
+
+There are also a bunch of CSS comments, which are like HTML comments, except
+they start with `/*` and end with `*/` instead of `<!--` and `-->`.
+
+CSS is composed by a bunch of rule sets, which look like
+
+```css
+<selector> {
+    <property> : <value>;
+}
+```
+
+The first part of a rule set is the selector, which tells the browser which
+HTML elements the rule set applies to. You can see that in our single rule
+set, we have the selector `#example`. What does this mean? Well, you can see
+in our HTML file, that the "Hello, World!" paragraph has the attribute
+`id="example"`. The `#` in the selector means that it is matching an element
+by its id attribute. The text afterwards is just the id itself.
+
+Inside the curly brackets of the rule set are the declarations. Each declaration
+is has a property and a value separated by a colon and is ended with a semicolon.
+The first declaration has the property "color", which means we are setting the
+font color. The value is `#ff0000`, which means red. Why does it mean red?
+To explain this fully would be kind of complicated and outside the scope of
+this introductory lesson. Suffice to say that colors in HTML are given
+unique identifiers which consist of `#` followed by 6 alphanumeric characters.
+There are often referred to as color codes. The color code for red is `#ff0000`.
+You can find all the other color codes at [this website](http://html-color-codes.info/).
+If you want to learn more about the color codes and what those alphanumeric
+characters mean, you can read about them on [Wikipedia](https://en.wikipedia.org/wiki/Html_color_codes).
+
+The second declaration has the property "font-size" and the value "18pt".
+This, expectedly, sets the font size of the element to be 18 points. The "pt"
+is necessary since there are many different units you can use to specify
+sizes in CSS.
+
+Try changing the color and font size for the example paragraph. You can also
+try creating new rule sets for paragraphs that you have created. Don't forget
+to give your newly created paragraphs id attributes so that your CSS rule sets
+can match on them.
+
+Once you feel comfortable with basic HTML and CSS, you can move on to the
+next lesson.
