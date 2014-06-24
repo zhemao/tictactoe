@@ -7,7 +7,7 @@
  * Adding stuff inside the brackets will change the appearance of that element.
  */
 
-.cell {
+td {
   border: 1px solid black;
   width: 100px;
   height: 100px;
