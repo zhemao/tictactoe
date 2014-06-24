@@ -1,5 +1,5 @@
 ---
-title: Lesson 1
+title: Lesson 1 - Getting Started
 layout: post
 ---
 
@@ -136,4 +136,4 @@ to give your newly created paragraphs id attributes so that your CSS rule sets
 can match on them.
 
 Once you feel comfortable with basic HTML and CSS, you can move on to the
-next lesson.
+[next lesson]({{ site.baseurl }}/2014/06/24/lesson-2.html).

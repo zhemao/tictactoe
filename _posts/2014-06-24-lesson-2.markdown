@@ -1,0 +1,106 @@
+---
+title: Lesson 2 - HTML and CSS
+layout: post
+---
+
+Now that you have gotten some familiarity with HTML and CSS, we can start
+laying out the game board for our Tic-Tac-Toe game.
+
+Tic-Tac-Toe is played on a 3x3 grid. We can create this in HTML using the
+HTML `<table>` element.
+
+```html
+<table>
+    <tr><td/><td/><td/></tr>
+    <tr><td/><td/><td/></tr>
+    <tr><td/><td/><td/></tr>
+</table>
+```
+
+The `<table>` element contains `<tr>` elements, which are the table rows,
+and the `<tr>` elements contain `<td>` elements, which are the table cells.
+
+If you just put this in the "index.html" file, you probably won't see anything.
+This is because, by default, table cells are not given borders. We can give
+borders to our tables using CSS. In the "style.css" file, add a rule like
+the following.
+
+```css
+td {
+    border: 1px solid black;
+}
+```
+
+This gives each table cell a solid black border which is 1 pixel in thickness.
+Note the unit used here. A pixel is simply a single dot on the monitor.
+
+Another issue is that our table cells are empty, so by default the cells
+will have a zero width and height. We can set width and height explicitly
+in our CSS rule set.
+
+```css
+td {
+    border: 1px solid black;
+    width: 100px;
+    height: 100px;
+}
+```
+
+Now your table will look something like the following.
+
+<table class="lesson2-table">
+    <tr><td/><td/><td/></tr>
+    <tr><td/><td/><td/></tr>
+    <tr><td/><td/><td/></tr>
+</table>
+
+Now what does the table look like when you put a X or O in the table cell?
+
+```html
+<table>
+    <tr><td>O</td><td/><td/></tr>
+    <tr><td/><td>X</td><td/></tr>
+    <tr><td/><td/><td/></tr>
+</table>
+```
+
+<table class="lesson2-table">
+    <tr><td>O</td><td/><td/></tr>
+    <tr><td/><td>X</td><td/></tr>
+    <tr><td/><td/><td/></tr>
+</table>
+
+Hmm, not so great. We'd like the X and O to have larger font and be centered.
+As we've seen last lesson, we can change the font using the "font-size"
+property. The alignment can be changed using the "text-align" property.
+
+```css
+table {
+    font-size: 24pt;
+    text-align: center;
+}
+```
+
+<table id="lesson2-righttext" class="lesson2-table">
+    <tr><td>O</td><td/><td/></tr>
+    <tr><td/><td>X</td><td/></tr>
+    <tr><td/><td/><td/></tr>
+</table>
+
+Now we have a nice-looking game grid to use. One last thing though, we should
+give each cell a unique ID. This will help us when we are coding the game logic.
+
+```html
+<table>
+    <tr><td id="00"/><td id="01"/><td id="02"/></tr>
+    <tr><td id="10"/><td id="11"/><td id="12"/></tr>
+    <tr><td id="20"/><td id="21"/><td id="22"/></tr>
+</table>
+```
+
+If you want to learn more about HTML and CSS, the
+[Mozilla Developer Network](https://developer.mozilla.org/en-US/) has very
+good documentation.
+
+Now that we have the HTML and CSS set up, we can move on to writing the
+Javascript in the next lesson.
