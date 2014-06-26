@@ -1,4 +1,4 @@
 name: Build Your Own Tic-Tac-Toe
 markdown: redcarpet
-highlighter: true
+highlighter: pygments
 baseurl: /tictactoe
