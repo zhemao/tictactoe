@@ -13,7 +13,13 @@ var player = X;
 var gamewon = false;
 
 function playerString(val) {
-    return (val === X) ? "X" : "O";
+    if (val === X) {
+        return "X";
+    }
+    if (val === O) {
+        return "O";
+    }
+    return "";
 }
 
 function fillCell(r, c, val) {
