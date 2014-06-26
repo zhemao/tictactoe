@@ -96,11 +96,7 @@ function handle_click(ev) {
 function setup() {
     // This function will be run once at the beginning
     // Put any one-time setup code here.
-    for (var r = 0; r < grid.length; r++) {
-        for (var c = 0; c < grid[r].length; c++) {
-            $("#" + r + "" + c).click(handle_click);
-        }
-    }
+    $("td").click(handle_click);
 }
 
 // This tells the browser to run the "setup" function once the HTML document
