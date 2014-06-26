@@ -57,7 +57,7 @@ function isDraw() {
     return true;
 }
 
-function handle_click(ev) {
+function handleClick(ev) {
     if (gamewon) {
         return;
     }
@@ -96,7 +96,7 @@ function handle_click(ev) {
 function setup() {
     // This function will be run once at the beginning
     // Put any one-time setup code here.
-    $("td").click(handle_click);
+    $("td").click(handleClick);
 }
 
 // This tells the browser to run the "setup" function once the HTML document
