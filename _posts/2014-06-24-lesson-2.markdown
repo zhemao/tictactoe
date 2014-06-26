@@ -107,4 +107,4 @@ If you want to learn more about HTML and CSS, the
 good documentation.
 
 Now that we have the HTML and CSS set up, we can move on to writing the
-Javascript in the next lesson.
+Javascript in the [next lesson]({{ site.baseurl }}/2014/06/24/lesson-3.html).

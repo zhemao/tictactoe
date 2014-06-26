@@ -1,0 +1,442 @@
+---
+title: Lesson 3 - Javascript
+layout: post
+---
+
+Now that we have a game grid in HTML to work with, we can start writing the
+Javascript which allow us to actually play a game.
+
+Javascript is a full programming language and so can be a bit complex for
+first-timers. Rather than try to describe the basics in full here, I will
+simply point you to some great existing resources on the web that teach it.
+Both [Codecademy](http://www.codecademy.com/tracks/javascript) and
+[Code Monster](http://www.crunchzilla.com/code-monster) have excellent
+tutorials. If you've never programmed before, I highly recommend going through
+the introductory lessons on one of those sites before continuing.
+
+In order to code up the game, we will need to be able to manipulate the
+elements of the HTML page, especially the cells of the table. The library we
+use to do this is called JQuery.
+
+In order to manipulate an element, we first need to find it. In JQuery, this
+is done using selectors similar to the ones used by CSS. For instance, to get
+all the table cells, we can say `$("td")`. This will return an object
+containing all of the table cell elements on the page.
+
+The first thing we need to do for our game is to register a click handler so
+that we can perform some action when the player clicks on one of the table
+cells. First, we define a handler function in application.js.
+
+```javascript
+function handleClick(ev) {
+    console.log(ev);
+}
+```
+
+Then, in the "setup" function, we attach the handler to all of the table cells.
+
+```javascript
+$("td).click(handleClick);
+```
+
+There are several things going on in that last line. First, we select all of
+the "td" elements. Then, we call the "click" method on them. This method gets
+passed the "handleClick" function we defined earlier. Yes, in Javascript,
+you can in fact pass functions around just like any other variable.
+
+Right now, our click handler simply logs the event to the developer console.
+If you open up the javascript console in your web browser
+(Tools -> Javascript Console in Chrome), you can see an event object being
+logged every time you click a cell.
+
+You will see in the log that the event object has a property called "target",
+which is the element that generated the click. From this, we can pull out
+the element's id.
+
+```javascript
+var id = ev.target.id;
+```
+
+Since we made the IDs of the cells pairs of numbers, we can pick the ID apart
+in order to get the row and column number.
+
+```javascript
+var r = parseInt(id[0]);
+var c = parseInt(id[1]);
+```
+
+The `id` variable is a string, so indexing into it gives us the individual
+characters. The `parseInt` function takes a string and converts it into an
+integer. Therefore, the string "02" will be split up into "0" and "2", and
+these will be converted into integers 0 and 2.
+
+Now what do we do with the row and column? We need to keep an internal
+representation of the game grid. We can do this using a 2D array, which is an
+array of arrays.
+
+First, we declare some constants to represent each of the three possible states
+for a cell. It can be empty. have an X in it, or have an O in it.
+
+```javascript
+var X = -1;
+var O = 1;
+var E = 0;
+```
+
+These variable declarations should go outside of any function so that they
+are accessible from any function. We then define the grid itself, again outside
+of any function.
+
+```javascript
+var grid = [[E, E, E], [E, E, E], [E, E, E]];
+```
+
+All the cells should initially be empty.
+
+We also should keep track of who the current player is.
+
+```javascript
+var player = X;
+```
+
+Since X is always the first to make a move, we initialize player to be X.
+
+Now, every time we click a cell, we should update our internal representation
+of the grid, as well as the grid itself in the HTML document. We can define
+a `fillCell` function that will do both things. That way, we are less likely
+to update one while forgetting to update the other.
+
+```javascript
+function fillCell(r, c, val) {
+    grid[r][c] = val;
+    var str = "";
+    if (val === X) {
+        str = "X";
+    } else if (val === O) {
+        str = "O";
+    }
+    $("#" + r + "" + c).text(str);
+}
+```
+
+The first line merely indexes into our 2D array and sets the value.
+Updating the appearance of the cell in HTML is a bit trickier. First, we need
+to decide what string we are placing in the cell. That is what the
+"if" - "else if" statements do. Then we have to find the table cell element
+in the HTML document using an id selector. The code `"#" + r + "" + c`
+generates the selector by concatenating the row and column integers into a
+string. Once we have the element, we can update its text content using the
+`text` method.
+
+We will probably need to convert "X" or "O" into a string again in the future,
+so we should probably make that a separate function.
+
+```javascript
+function playerString(val) {
+    if (val === X) {
+        return "X";
+    }
+    if (val === O) {
+        return "O";
+    }
+    return "";
+}
+```
+
+Then, we can rewrite "fillCell" as
+
+```javascript
+function fillCell(r, c, val) {
+    grid[r][c] = val;
+    $("#" + r + "" + c).text(playerString(val));
+}
+```
+
+Now, we can add the following code to the "setup" method below the part where
+we pulled out "r" and "c".
+
+```javascript
+fillCell(r, c, player);
+
+player *= -1;
+```
+
+The last line swaps the player, since X is the negative of O.
+Once we have added that, the cells will alternately update with X or O on each
+click.
+
+This code currently breaks the rules somewhat, because it allows you to place
+an X or O in a cell which is not empty. We need to fix this in order to make
+our game work. Add the following code after pulling out "r" and "c" and
+before calling "fillCell".
+
+```javascript
+if (grid[r][c] != E) {
+    return;
+}
+```
+
+That way, the click handler will return early if the player tries to make an
+invalid move, and so clicking on a non-empty cell will do nothing.
+
+The last thing missing is checking when the game has ended. This can occur with
+one player winning, or with a draw when all the cells have been filled in.
+
+To check whether the player who just made a move has won, we need only check
+the row, column, and diagonals of the cell which was just filled in. We can
+define a `hasWon` method to do this, which will return true if the player just
+won, and false otherwise.
+
+```javascript
+function hasWon(r, c) {
+    // checking code here
+}
+```
+
+First, we check to see if all the cells in the row are the same and return
+true if they are.
+
+```javascript
+if (grid[r][0] === grid[r][1] && grid[r][1] === grid[r][2]) {
+    return true;
+}
+```
+
+If cell 0 is the same as cell 1, and cell 1 is the same as cell 2, then we
+automatically know that cell 0 is the same as cell 2, so only two equality
+statements are needed. Similarly, for checking the column.
+
+
+```javascript
+if (grid[0][c] === grid[1][c] && grid[1][c] === grid[2][c]) {
+    return true;
+}
+```
+
+Checking diagonals is a bit trickier, since the cell may not be on a diagonal.
+To check to see if it is on the first diagonal, the one going from top left
+to bottom right, we should check that row and column are equal. Then, we
+can check that all the cells along the diagonal are the same.
+
+```javascript
+if (r === c && grid[0][0] === grid[1][1] && grid[1][1] === grid[2][2]) {
+    return true;
+}
+```
+
+The other diagonal goes from top right to bottom left, and contains cells
+(2, 0), (1, 1), and (0, 2). So we can check that the cell is on this diagonal
+by checking that two minus the row is equal to the column.
+
+```javascript
+if ((2 - r) != c) {
+    return false;
+}
+```
+
+Since we've checked all the other conditions, the player could not have won if
+the cell clicked is not on this second diagonal, so we can safely return
+false. If it is on the diagonal, we check that all the cells on the diagonal
+are equal.
+
+```javascript
+return grid[0][2] === grid[1][1] && grid[1][1] === grid[2][0];
+```
+
+So now our full "hasWon" function looks like this.
+
+```javascript
+function hasWon(r, c) {
+    // check the row
+    if (grid[r][0] === grid[r][1] && grid[r][1] === grid[r][2]) {
+        return true;
+    }
+
+    // check the column
+    if (grid[0][c] === grid[1][c] && grid[1][c] === grid[2][c]) {
+        return true;
+    }
+
+    // check the diagonal starting at top left
+    if (r === c && grid[0][0] === grid[1][1] && grid[1][1] === grid[2][2]) {
+        return true;
+    }
+
+    // check that the cell is in the other diagonal
+    if ((2 - r) != c) {
+        return false;
+    }
+
+    // check the other diagonal
+    return grid[0][2] === grid[1][1] && grid[1][1] === grid[2][0];
+}
+```
+
+To check if the game is a draw, we just have to check if all the cells are
+non-empty. So we define an "isDraw" method which returns true if the game
+has ended in a draw.
+
+```javascript
+function isDraw() {
+    for (var r = 0; r < grid.length; r++) {
+        for (var c = 0; c < grid[r].length; c++) {
+            if (grid[r][c] === E) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+```
+
+The nested for loops will iterate through every single cell. If it sees an
+empty cell, it will return that the game is not yet a draw. If it gets through
+all the cells without finding an empty one, then it is a draw.
+
+We can now add calls to these two functions in our "handleClick" function in
+between updating the grid and switching the player.
+
+```javascript
+if (hasWon(r, c)) {
+    $("#status-message").text(
+            "Player " + playerString(player) + " has won");
+    gameover = true;
+    return;
+}
+if (isDraw()) {
+    $("#status-message").text("It's a draw");
+    gameover = true;
+    return;
+}
+```
+
+You will want to add a paragraph to your HTML with the id of "status-message"
+so that we have somewhere to show the result.
+
+```html
+<p id="status-message"/>
+```
+
+In addition, you will want to add a global "gameover" boolean variable to save
+whether the game is over or not.
+
+```javascript
+var gameover = false;
+```
+
+Then, at the top of the click handler, return early if "gameover" is true,
+since that means we don't need to do anything.
+
+```javascript
+if (gameover) {
+    return;
+}
+```
+
+And now we are done. You now have a two-player game of Tic-Tac-Toe. Here is
+the complete application.js file at this point.
+
+```javascript
+var X = -1;
+var O = 1;
+var E = 0;
+
+var grid = [[E, E, E], [E, E, E], [E, E, E]];
+
+var player = X;
+var gameover = false;
+
+function playerString(val) {
+    if (val === X) {
+        return "X";
+    }
+    if (val === O) {
+        return "O";
+    }
+    return "";
+}
+function fillCell(r, c, val) {
+    grid[r][c] = val;
+    $("#" + r + "" + c).text(playerString(val));
+}
+
+function hasWon(r, c) {
+    // check the row
+    if (grid[r][0] === grid[r][1] && grid[r][1] === grid[r][2]) {
+        return true;
+    }
+
+    // check the column
+    if (grid[0][c] === grid[1][c] && grid[1][c] === grid[2][c]) {
+        return true;
+    }
+
+    // check the diagonal starting at top left
+    if (r === c && grid[0][0] === grid[1][1] && grid[1][1] === grid[2][2]) {
+        return true;
+    }
+
+    // check that the cell is in the other diagonal
+    if ((2 - r) != c) {
+        return false;
+    }
+
+    // check the other diagonal
+    return grid[0][2] === grid[1][1] && grid[1][1] === grid[2][0];
+}
+
+function isDraw() {
+    for (var r = 0; r < grid.length; r++) {
+        for (var c = 0; c < grid[r].length; c++) {
+            if (grid[r][c] === E) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+function handleClick(ev) {
+    if (gameover) {
+        return;
+    }
+
+    // get the row and column out of the id
+    var id = ev.target.id;
+    var r = parseInt(id[0]);
+    var c = parseInt(id[1]);
+
+    // make sure that the cell is empty
+    if (grid[r][c] != E) {
+        return;
+    }
+
+    // fill the cell
+    fillCell(r, c, player);
+    // check if the player has just won
+    if (hasWon(r, c)) {
+        $("#status-message").text(
+                "Player " + playerString(player) + " has won");
+        gameover = true;
+        return;
+    }
+    if (isDraw()) {
+        $("#status-message").text("It's a draw");
+        gameover = true;
+        return;
+    }
+    player *= -1;
+}
+
+function setup() {
+    // This function will be run once at the beginning
+    // Put any one-time setup code here.
+    $("td").click(handleClick);
+}
+
+// This tells the browser to run the "setup" function once the HTML document
+// is finished loading.
+$(document).ready(setup);
+```
+
+In the next lesson, we will learn how to write an AI opponent to play against.
