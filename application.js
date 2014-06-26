@@ -10,7 +10,7 @@ var E = 0;
 var grid = [[E, E, E], [E, E, E], [E, E, E]];
 
 var player = X;
-var gamewon = false;
+var gameover = false;
 
 function playerString(val) {
     if (val === X) {
@@ -21,7 +21,6 @@ function playerString(val) {
     }
     return "";
 }
-
 function fillCell(r, c, val) {
     grid[r][c] = val;
     $("#" + r + "" + c).text(playerString(val));
@@ -64,7 +63,7 @@ function isDraw() {
 }
 
 function handleClick(ev) {
-    if (gamewon) {
+    if (gameover) {
         return;
     }
 
@@ -88,12 +87,12 @@ function handleClick(ev) {
     if (hasWon(r, c)) {
         $("#status-message").text(
                 "Player " + playerString(player) + " has won");
-        gamewon = true;
+        gameover = true;
         return;
     }
     if (isDraw()) {
         $("#status-message").text("It's a draw");
-        gamewon = true;
+        gameover = true;
         return;
     }
     player = -player;
