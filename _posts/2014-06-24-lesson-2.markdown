@@ -34,6 +34,10 @@ td {
 This gives each table cell a solid black border which is 1 pixel in thickness.
 Note the unit used here. A pixel is simply a single dot on the monitor.
 
+Note that the selector, "td", does not start with a `#`. That means the rule
+does not match based on ID. Instead, it matches based on the element name.
+So this will rule will apply to all `<td>` elements on the page.
+
 Another issue is that our table cells are empty, so by default the cells
 will have a zero width and height. We can set width and height explicitly
 in our CSS rule set.
