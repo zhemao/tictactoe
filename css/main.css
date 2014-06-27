@@ -188,6 +188,7 @@ a:visited { color: #a0a; }
   margin: 0px;
 }
 
-.highlight {
+.highlight, .caption {
   margin-top: 0px;
+  margin-bottom: 10px;
 }
