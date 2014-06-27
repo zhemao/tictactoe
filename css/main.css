@@ -181,3 +181,13 @@ a:visited { color: #a0a; }
   font-size: 24pt;
   text-align: center;
 }
+
+.hidden {
+  background-color: #F5F6CE;
+  padding: 10px;
+  margin: 0px;
+}
+
+.highlight {
+  margin-top: 0px;
+}

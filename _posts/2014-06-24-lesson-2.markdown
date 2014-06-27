@@ -6,49 +6,50 @@ layout: post
 Now that you have gotten some familiarity with HTML and CSS, we can start
 laying out the game board for our Tic-Tac-Toe game.
 
-Tic-Tac-Toe is played on a 3x3 grid. We can create this in HTML using the
-HTML `<table>` element.
+In this lesson, we encourage you to try and find the answers yourself by
+reading the documentation. You can find very good documentation for
+HTML and CSS on [webplatform.org](http://docs.webplatform.org/wiki/Main_Page).
 
-```html
+Tic-Tac-Toe is played on a 3x3 grid. We can create this in HTML using the
+HTML `<table>` element. Can you figure out how?
+
+<div class="hidden">
+{% highlight html %}
 <table>
     <tr><td/><td/><td/></tr>
     <tr><td/><td/><td/></tr>
     <tr><td/><td/><td/></tr>
 </table>
-```
-
-The `<table>` element contains `<tr>` elements, which are the table rows,
-and the `<tr>` elements contain `<td>` elements, which are the table cells.
+{% endhighlight %}
+<p class="caption">
+The <code>&lt;tr&gt;</code> element is a table row, and the
+<code>&lt;td&gt;</code> element is a table cell.
+</p>
+<button class="show">Show Answer</button>
+</div>
 
 If you just put this in the "index.html" file, you probably won't see anything.
-This is because, by default, table cells are not given borders. We can give
-borders to our tables using CSS. In the "style.css" file, add a rule like
-the following.
-
-```css
-td {
-    border: 1px solid black;
-}
-```
-
-This gives each table cell a solid black border which is 1 pixel in thickness.
-Note the unit used here. A pixel is simply a single dot on the monitor.
-
-Note that the selector, "td", does not start with a `#`. That means the rule
-does not match based on ID. Instead, it matches based on the element name.
-So this will rule will apply to all `<td>` elements on the page.
-
+This is because, by default, table cells are not given borders.
 Another issue is that our table cells are empty, so by default the cells
-will have a zero width and height. We can set width and height explicitly
-in our CSS rule set.
+will have a zero width and height. We can fix both of these issues using CSS.
+How would we do that?
 
-```css
+<div class="hidden">
+{% highlight css %}
 td {
     border: 1px solid black;
     width: 100px;
     height: 100px;
 }
-```
+{% endhighlight %}
+<p class="caption">
+Note that the selector, <code>td</code>, does not start with a <code>#</code>.
+That means the rule does not match based on ID.
+Instead, it matches based on the element name.
+So this will rule will apply to all <code>&lt;td&gt;</code> elements on the page.
+</p>
+<button class="show">Show Answer</button>
+</div>
 
 Now your table will look something like the following.
 
@@ -58,15 +59,7 @@ Now your table will look something like the following.
     <tr><td/><td/><td/></tr>
 </table>
 
-Now what does the table look like when you put a X or O in the table cell?
-
-```html
-<table>
-    <tr><td>O</td><td/><td/></tr>
-    <tr><td/><td>X</td><td/></tr>
-    <tr><td/><td/><td/></tr>
-</table>
-```
+What does the table look like when you put a X or O in the table cell?
 
 <table class="lesson2-table">
     <tr><td>O</td><td/><td/></tr>
@@ -76,14 +69,17 @@ Now what does the table look like when you put a X or O in the table cell?
 
 Hmm, not so great. We'd like the X and O to have larger font and be centered.
 As we've seen last lesson, we can change the font using the "font-size"
-property. The alignment can be changed using the "text-align" property.
+property. But how do we change the alignment?
 
-```css
+<div class="hidden">
+{% highlight css %}
 table {
     font-size: 24pt;
     text-align: center;
 }
-```
+{% endhighlight %}
+<button class="show">Show Answer</button>
+</div>
 
 <table id="lesson2-righttext" class="lesson2-table">
     <tr><td>O</td><td/><td/></tr>
@@ -94,17 +90,16 @@ table {
 Now we have a nice-looking game grid to use. One last thing though, we should
 give each cell a unique ID. This will help us when we are coding the game logic.
 
-```html
+<div class="hidden">
+{% highlight html %}
 <table>
     <tr><td id="00"/><td id="01"/><td id="02"/></tr>
     <tr><td id="10"/><td id="11"/><td id="12"/></tr>
     <tr><td id="20"/><td id="21"/><td id="22"/></tr>
 </table>
-```
-
-If you want to learn more about HTML and CSS, the
-[Mozilla Developer Network](https://developer.mozilla.org/en-US/) has very
-good documentation.
+{% endhighlight %}
+<button class="show">Show Answer</button>
+</div>
 
 Now that we have the HTML and CSS set up, we can move on to writing the
 Javascript in the [next lesson]({{ site.baseurl }}/2014/06/24/lesson-3.html).

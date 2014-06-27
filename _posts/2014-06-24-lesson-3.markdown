@@ -51,24 +51,24 @@ logged every time you click a cell.
 
 You will see in the log that the event object has a property called "target",
 which is the element that generated the click. From this, we can pull out
-the element's id.
+the element's id. From the id, we must extract the row and column.
+How would you go about doing this?
 
-```javascript
+<div class="hidden">
+{% highlight javascript %}
 var id = ev.target.id;
-```
-
-Since we made the IDs of the cells pairs of numbers, we can pick the ID apart
-in order to get the row and column number.
-
-```javascript
 var r = parseInt(id[0]);
 var c = parseInt(id[1]);
-```
-
-The `id` variable is a string, so indexing into it gives us the individual
-characters. The `parseInt` function takes a string and converts it into an
-integer. Therefore, the string "02" will be split up into "0" and "2", and
-these will be converted into integers 0 and 2.
+{% endhighlight %}
+<p class="caption">
+The <code>id</code> variable is a string, so indexing into it gives us the
+individual characters. The <code>parseInt</code> function takes a string and
+converts it into an integer. Therefore, the string &quot;02&quot; will be split
+up into &quot;0&quot; and &quot;2&quot;, and these will be converted into
+integers 0 and 2.
+</p>
+<button class="show">Show Answer</button>
+</div>
 
 Now what do we do with the row and column? We need to keep an internal
 representation of the game grid. We can do this using a 2D array, which is an
@@ -85,13 +85,18 @@ var E = 0;
 
 These variable declarations should go outside of any function so that they
 are accessible from any function. We then define the grid itself, again outside
-of any function.
+of any function. What should this declaration look like?
 
-```javascript
+<div class="hidden">
+{% highlight javascript %}
 var grid = [[E, E, E], [E, E, E], [E, E, E]];
-```
-
-All the cells should initially be empty.
+{% endhighlight %}
+<p class="caption">
+This is how you declare and initialize a 2D array. All of the cells are
+initially set to empty.
+</p>
+<button class="show">Show Answer</button>
+</div>
 
 We also should keep track of who the current player is.
 
@@ -104,34 +109,11 @@ Since X is always the first to make a move, we initialize player to be X.
 Now, every time we click a cell, we should update our internal representation
 of the grid, as well as the grid itself in the HTML document. We can define
 a `fillCell` function that will do both things. That way, we are less likely
-to update one while forgetting to update the other.
+to update one while forgetting to update the other. How would we implement
+such a function?
 
-```javascript
-function fillCell(r, c, val) {
-    grid[r][c] = val;
-    var str = "";
-    if (val === X) {
-        str = "X";
-    } else if (val === O) {
-        str = "O";
-    }
-    $("#" + r + "" + c).text(str);
-}
-```
-
-The first line merely indexes into our 2D array and sets the value.
-Updating the appearance of the cell in HTML is a bit trickier. First, we need
-to decide what string we are placing in the cell. That is what the
-"if" - "else if" statements do. Then we have to find the table cell element
-in the HTML document using an id selector. The code `"#" + r + "" + c`
-generates the selector by concatenating the row and column integers into a
-string. Once we have the element, we can update its text content using the
-`text` method.
-
-We will probably need to convert "X" or "O" into a string again in the future,
-so we should probably make that a separate function.
-
-```javascript
+<div class="hidden">
+{% highlight javascript %}
 function playerString(val) {
     if (val === X) {
         return "X";
@@ -141,43 +123,76 @@ function playerString(val) {
     }
     return "";
 }
-```
 
-Then, we can rewrite "fillCell" as
-
-```javascript
 function fillCell(r, c, val) {
     grid[r][c] = val;
     $("#" + r + "" + c).text(playerString(val));
 }
-```
+{% endhighlight %}
+
+<p class="caption">
+The first line merely indexes into our 2D array and sets the value.
+Updating the appearance of the cell in HTML is a bit trickier. First, we need
+to decide what string we are placing in the cell. Since we will likely be doing
+this again later on, we put the conversion in a separate function.
+The next thing we do is find the table cell element in the HTML document using
+an id selector. The code <code>&quot;#&quot; + r + &quot;&quot; + c</code>
+generates the selector by concatenating the row and column integers into a
+string. Once we have the element, we can update its text content using the
+<code>text</code> method.
+
+</p>
+<button class="show">Show Answer</button>
+</div>
+
+
+We will probably need to convert "X" or "O" into a string again in the future,
+so we should probably make that a separate function.
 
 Now, we can add the following code to the "setup" method below the part where
 we pulled out "r" and "c".
 
 ```javascript
 fillCell(r, c, player);
-
-player *= -1;
 ```
 
-The last line swaps the player, since X is the negative of O.
-Once we have added that, the cells will alternately update with X or O on each
-click.
+We also need to switch the player variable to the other player? How would you
+do this?
+
+<div class="hidden">
+{% highlight javascript %}
+player = -player;
+{% endhighlight %}
+<p class="caption">
+There are many ways to do this, but since the value for X is the negative of
+the value for O, the simplest way is to just negate the value of player.
+</p>
+<button class="show">Show Answer</button>
+</div>
 
 This code currently breaks the rules somewhat, because it allows you to place
 an X or O in a cell which is not empty. We need to fix this in order to make
-our game work. Add the following code after pulling out "r" and "c" and
-before calling "fillCell".
+our game work. How would you make it so that nothing happens when an already
+filled column is clicked?
 
-```javascript
+<div class="hidden">
+<p class="caption">
+Add the following code after pulling out "r" and "c" and
+before calling "fillCell".
+</p>
+
+{% highlight javascript %}
 if (grid[r][c] != E) {
     return;
 }
-```
+{% endhighlight %}
 
+<p class="caption">
 That way, the click handler will return early if the player tries to make an
 invalid move, and so clicking on a non-empty cell will do nothing.
+</p>
+<button class="show">Show Answer</button>
+</div>
 
 The last thing missing is checking when the game has ended. This can occur with
 one player winning, or with a draw when all the cells have been filled in.
@@ -185,67 +200,83 @@ one player winning, or with a draw when all the cells have been filled in.
 To check whether the player who just made a move has won, we need only check
 the row, column, and diagonals of the cell which was just filled in. We can
 define a `hasWon` method to do this, which will return true if the player just
-won, and false otherwise.
+won, and false otherwise. How would such a function be implemented?
 
-```javascript
+<div class="hidden">
+<p class="caption">
+The function signature should look like this.
+</p>
+
+{% highlight javascript %}
 function hasWon(r, c) {
     // checking code here
 }
-```
+{% endhighlight %}
 
+<p class="caption">
 First, we check to see if all the cells in the row are the same and return
 true if they are.
+</p>
 
-```javascript
+{% highlight javascript %}
 if (grid[r][0] === grid[r][1] && grid[r][1] === grid[r][2]) {
     return true;
 }
-```
+{% endhighlight %}
 
+<p class="caption">
 If cell 0 is the same as cell 1, and cell 1 is the same as cell 2, then we
 automatically know that cell 0 is the same as cell 2, so only two equality
 statements are needed. Similarly, for checking the column.
+</p>
 
-
-```javascript
+{% highlight javascript %}
 if (grid[0][c] === grid[1][c] && grid[1][c] === grid[2][c]) {
     return true;
 }
-```
+{% endhighlight %}
 
+<p class="caption">
 Checking diagonals is a bit trickier, since the cell may not be on a diagonal.
 To check to see if it is on the first diagonal, the one going from top left
 to bottom right, we should check that row and column are equal. Then, we
 can check that all the cells along the diagonal are the same.
+</p>
 
-```javascript
+{% highlight javascript %}
 if (r === c && grid[0][0] === grid[1][1] && grid[1][1] === grid[2][2]) {
     return true;
 }
-```
+{% endhighlight %}
 
+<p class="caption">
 The other diagonal goes from top right to bottom left, and contains cells
 (2, 0), (1, 1), and (0, 2). So we can check that the cell is on this diagonal
 by checking that two minus the row is equal to the column.
+</p>
 
-```javascript
+{% highlight javascript %}
 if ((2 - r) != c) {
     return false;
 }
-```
+{% endhighlight %}
 
+<p class="caption">
 Since we've checked all the other conditions, the player could not have won if
 the cell clicked is not on this second diagonal, so we can safely return
 false. If it is on the diagonal, we check that all the cells on the diagonal
 are equal.
+</p>
 
-```javascript
+{% highlight javascript %}
 return grid[0][2] === grid[1][1] && grid[1][1] === grid[2][0];
-```
+{% endhighlight %}
 
+<p class="caption">
 So now our full "hasWon" function looks like this.
+</p>
 
-```javascript
+{% highlight javascript %}
 function hasWon(r, c) {
     // check the row
     if (grid[r][0] === grid[r][1] && grid[r][1] === grid[r][2]) {
@@ -270,13 +301,17 @@ function hasWon(r, c) {
     // check the other diagonal
     return grid[0][2] === grid[1][1] && grid[1][1] === grid[2][0];
 }
-```
+{% endhighlight %}
+
+<button class="show">Show Answer</button>
+</div>
 
 To check if the game is a draw, we just have to check if all the cells are
-non-empty. So we define an "isDraw" method which returns true if the game
-has ended in a draw.
+non-empty. How would you implement a function that returns true if the game
+is a draw?
 
-```javascript
+<div class="hidden">
+{% highlight javascript %}
 function isDraw() {
     for (var r = 0; r < grid.length; r++) {
         for (var c = 0; c < grid[r].length; c++) {
@@ -287,11 +322,14 @@ function isDraw() {
     }
     return true;
 }
-```
-
+{% endhighlight %}
+<p class="caption">
 The nested for loops will iterate through every single cell. If it sees an
 empty cell, it will return that the game is not yet a draw. If it gets through
 all the cells without finding an empty one, then it is a draw.
+</p>
+<button class="show">Show Answer</button>
+</div>
 
 We can now add calls to these two functions in our "handleClick" function in
 between updating the grid and switching the player.
@@ -336,7 +374,8 @@ if (gameover) {
 And now we are done. You now have a two-player game of Tic-Tac-Toe. Here is
 the complete application.js file at this point.
 
-```javascript
+<div class="hidden">
+{% highlight javascript %}
 var X = -1;
 var O = 1;
 var E = 0;
@@ -425,7 +464,7 @@ function handleClick(ev) {
         gameover = true;
         return;
     }
-    player *= -1;
+    player = -player;
 }
 
 function setup() {
@@ -437,6 +476,8 @@ function setup() {
 // This tells the browser to run the "setup" function once the HTML document
 // is finished loading.
 $(document).ready(setup);
-```
+{% endhighlight %}
+<button class="show">Show Answer</button>
+</div>
 
 In the next lesson, we will learn how to write an AI opponent to play against.
