@@ -36,7 +36,7 @@ function handleClick(ev) {
 Then, in the "setup" function, we attach the handler to all of the table cells.
 
 ```javascript
-$("td).click(handleClick);
+$("td").click(handleClick);
 ```
 
 There are several things going on in that last line. First, we select all of
