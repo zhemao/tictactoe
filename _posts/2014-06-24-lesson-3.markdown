@@ -66,8 +66,8 @@ var c = parseInt(id[1]);
 <p class="caption">
 The <code>id</code> variable is a string, so indexing into it gives us the
 individual characters. The <code>parseInt</code> function takes a string and
-converts it into an integer. Therefore, the string &quot;02&quot; will be split
-up into &quot;0&quot; and &quot;2&quot;, and these will be converted into
+converts it into an integer. Therefore, the string "02" will be split
+up into "0" and "2", and these will be converted into
 integers 0 and 2.
 </p>
 <button class="show">Show Answer</button>
@@ -139,7 +139,7 @@ Updating the appearance of the cell in HTML is a bit trickier. First, we need
 to decide what string we are placing in the cell. Since we will likely be doing
 this again later on, we put the conversion in a separate function.
 The next thing we do is find the table cell element in the HTML document using
-an id selector. The code <code>&quot;#&quot; + r + &quot;&quot; + c</code>
+an id selector. The code <code>"#" + r + "" + c</code>
 generates the selector by concatenating the row and column integers into a
 string. Once we have the element, we can update its text content using the
 <code>text</code> method.
