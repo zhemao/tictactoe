@@ -18,6 +18,9 @@ In order to code up the game, we will need to be able to manipulate the
 elements of the HTML page, especially the cells of the table. The library we
 use to do this is called JQuery.
 
+You can find Javascript documentation on [webplatform.org](http://docs.webplatform.org/wiki/Main_Page).
+JQuery documentation can be found at [jquery.com](https://api.jquery.com/).
+
 In order to manipulate an element, we first need to find it. In JQuery, this
 is done using selectors similar to the ones used by CSS. For instance, to get
 all the table cells, we can say `$("td")`. This will return an object
