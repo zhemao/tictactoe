@@ -90,7 +90,7 @@ function handle_click(ev) {
         gamewon = true;
         return;
     }
-    player *= -1;
+    player = -player;
 }
 
 function setup() {
