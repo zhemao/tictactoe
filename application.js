@@ -12,6 +12,8 @@ var grid = [[E, E, E], [E, E, E], [E, E, E]];
 var player = X;
 var gameover = false;
 
+var AI = EasyAI;
+
 function playerString(val) {
     if (val === X) {
         return "X";
@@ -20,10 +22,6 @@ function playerString(val) {
         return "O";
     }
     return "";
-}
-function fillCell(r, c, val) {
-    grid[r][c] = val;
-    $("#" + r + "" + c).text(playerString(val));
 }
 
 function hasWon(r, c) {
@@ -62,6 +60,25 @@ function isDraw() {
     return true;
 }
 
+function fillCell(r, c, val) {
+    // fill the cell
+    grid[r][c] = val;
+    $("#" + r + "" + c).text(playerString(val));
+
+    if (hasWon(r, c)) {
+        $("#status-message").text(
+                "Player " + playerString(val) + " has won");
+        gameover = true;
+        return true;
+    }
+    if (isDraw()) {
+        $("#status-message").text("It's a draw");
+        gameover = true;
+        return true;
+    }
+    return false
+}
+
 function handleClick(ev) {
     if (gameover) {
         return;
@@ -82,20 +99,11 @@ function handleClick(ev) {
     }
 
     // fill the cell
-    fillCell(r, c, player);
-    // check if the player has just won
-    if (hasWon(r, c)) {
-        $("#status-message").text(
-                "Player " + playerString(player) + " has won");
-        gameover = true;
+    if (fillCell(r, c, player))
         return;
-    }
-    if (isDraw()) {
-        $("#status-message").text("It's a draw");
-        gameover = true;
-        return;
-    }
-    player = -player;
+
+    var move = AI.makeMove(grid, -player, r, c);
+    fillCell(move.r, move.c, -player);
 }
 
 function setup() {
