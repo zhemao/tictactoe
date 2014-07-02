@@ -91,7 +91,6 @@ function findEmptyInRightDiagonal(grid) {
 function findTwoInARow (grid, player) {
     for (var r = 0; r < 3; r++) {
         var counts = countInRow(grid, r);
-        console.log(counts);
         if (counts[player] === 2 && counts[E] === 1) {
             return {"r": r, "c": findEmptyInRow(grid, r)};
         }
