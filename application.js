@@ -12,7 +12,7 @@ var grid = [[E, E, E], [E, E, E], [E, E, E]];
 var player = X;
 var gameover = false;
 
-var AI = EasyAI;
+var AI = IntermediateAI;
 
 function playerString(val) {
     if (val === X) {
@@ -103,6 +103,7 @@ function handleClick(ev) {
         return;
 
     var move = AI.makeMove(grid, -player, r, c);
+    $("#status-message").text("r: " + move.r + ", c: " + move.c);
     fillCell(move.r, move.c, -player);
 }
 
