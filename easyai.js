@@ -1,6 +1,6 @@
 var EasyAI = {};
 
-EasyAI.makeMove = function (grid, player, opr, opc) {
+function pickRandomly(grid) {
     var move = {};
 
     do {
@@ -10,4 +10,8 @@ EasyAI.makeMove = function (grid, player, opr, opc) {
     } while (grid[move.r][move.c] != E);
 
     return move;
+}
+
+EasyAI.makeMove = function (grid, player, opr, opc) {
+    return pickRandomly;
 }
