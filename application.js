@@ -12,7 +12,7 @@ var grid = [[E, E, E], [E, E, E], [E, E, E]];
 var player = X;
 var gameover = false;
 
-var AI = IntermediateAI;
+var AI = AdvancedAI;
 
 function playerString(val) {
     if (val === X) {
