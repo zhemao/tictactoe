@@ -12,6 +12,6 @@ function pickRandomly(grid) {
     return move;
 }
 
-EasyAI.makeMove = function (grid, player, opr, opc) {
+EasyAI.makeMove = function (grid, player) {
     return pickRandomly;
 }

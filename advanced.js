@@ -1,6 +1,6 @@
 var AdvancedAI = {};
 
-AdvancedAI.makeMove = function (grid, player, opr, opc) {
+AdvancedAI.makeMove = function (grid, player) {
     var pos = findTwoInARow(grid, player);
 
     if (pos != null) {

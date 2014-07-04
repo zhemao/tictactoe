@@ -102,7 +102,7 @@ function handleClick(ev) {
     if (fillCell(r, c, player))
         return;
 
-    var move = AI.makeMove(grid, -player, r, c);
+    var move = AI.makeMove(grid, -player);
     fillCell(move.r, move.c, -player);
 }
 
