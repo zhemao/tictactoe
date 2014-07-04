@@ -483,4 +483,5 @@ $(document).ready(setup);
 <button class="show">Show Answer</button>
 </div>
 
-In the next lesson, we will learn how to write an AI opponent to play against.
+In the [next lesson]({{ site.baseurl }}/2014/07/03/lesson-4.html),
+we will learn how to write an AI opponent to play against.

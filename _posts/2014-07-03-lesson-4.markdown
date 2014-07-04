@@ -1,0 +1,309 @@
+---
+title: Lesson 4 - AI
+layout: post
+---
+
+Our game is currently multiplayer. Why don't we try making it multiplayer by
+adding an AI opponent. To do this we will first have to make some modification
+to our click handler.
+
+```javascript
+function handleClick(ev) {
+    if (gameover) {
+        return;
+    }
+
+    // clear the error message
+    $("#error-message").text("");
+
+    // get the row and column out of the id
+    var id = ev.target.id;
+    var r = parseInt(id[0]);
+    var c = parseInt(id[1]);
+
+    // make sure that the cell is empty
+    if (grid[r][c] != E) {
+        $("#error-message").text("Cell is not empty");
+        return;
+    }
+
+    // fill the cell
+    if (fillCell(r, c, player))
+        return;
+
+    var move = makeMove(grid, -player);
+    fillCell(move.r, move.c, -player);
+}
+```
+
+Now, instead of switching players, we call a `makeMove` function, which will
+return an object with "r" and "c" attributes for the row and column of the
+grid the AI player is to fill in. We will build this function up step by step
+to make it more and more "intelligent".
+
+The dumbest AI will just randomly choose an empty location.
+
+```javascript
+function makeMove(grid, player) {
+    return pickRandomly(grid);
+}
+```
+
+How would you implement the `pickRandomly` function?
+
+<div class="hidden">
+{% highlight javascript %}
+function pickRandomly(grid) {
+    var move = {};
+
+    do {
+        var num = Math.floor(9 * Math.random());
+        move.r = num % 3;
+        move.c = Math.floor(num / 3);
+    } while (grid[move.r][move.c] != E);
+
+    return move;
+}
+{% endhighlight %}
+<p class="caption">
+To choose a cell randomly, you pick a random number less than 9.
+Each number maps to a distinct cell.
+</p>
+<table class="caption">
+<tr><th></th><th>0</th><th>1</th><th>2</th></tr>
+<tr><th>0</th><td>0</td><td>1</td><td>2</td></tr>
+<tr><th>1</th><td>3</td><td>4</td><td>5</td></tr>
+<tr><th>2</th><td>6</td><td>7</td><td>8</td></tr>
+</table>
+<p class="caption">
+You can generate the row by dividing the random number by three and then
+flooring it (taking the closest integer less than the number).
+The column is the remainder of the division. The "%" is the modulus operator,
+which takes the integral remainder of a division.
+</p>
+<p class="caption">
+Just taking a random cell won't guarantee that the move is valid, we need to
+keep picking a random number until we find a cell which is empty, hence the
+"do ... while" loop. This is basically a while loop except the body is
+executed once before checking the condition.
+</p>
+<button class="show">Show Answer</button>
+</div>
+
+If you play the game now, you will see that the AI is pretty easy to beat.
+In order for it to have a chance of winning, we will need to make it more
+clever.
+
+The first we should do is to check if the AI player (O), has two cells in a
+line. If so, then the AI should complete the line and thus win. If O is not
+close to winning, it should check whether X has two in a line and then block
+it. If neither of these conditions are met, it should fall back to choosing
+randomly. How would you implement this?
+
+<div class="hidden">
+<p class="caption">
+First, you should implement functions for counting the number cells of each
+type in a row.
+<p>
+
+{% highlight javascript %}
+function countInRow(grid, r) {
+    var counts = {};
+    counts[X] = 0;
+    counts[O] = 0;
+    counts[E] = 0;
+
+    for (var c = 0; c < 3; c++) {
+        counts[grid[r][c]]++;
+    }
+
+    return counts;
+}
+
+function findEmptyInRow(grid, r) {
+    for (var c = 0; c < 3; c++) {
+        if (grid[r][c] === E) {
+            return c;
+        }
+    }
+    return -1;
+}
+{% endhighlight %}
+
+<p class="caption">
+Similar functions can be implemented for columns and diagonals.
+</p>
+
+{% highlight javascript %}
+function countInColumn(grid, c) {
+    var counts = {};
+    counts[X] = 0;
+    counts[O] = 0;
+    counts[E] = 0;
+
+    for (var r = 0; r < 3; r++) {
+        counts[grid[r][c]]++;
+    }
+
+    return counts;
+}
+
+function findEmptyInColumn(grid, c) {
+    for (var r = 0; r < 3; r++) {
+        if (grid[r][c] === E) {
+            return r;
+        }
+    }
+    return -1;
+}
+
+function countInLeftDiagonal(grid, player) {
+    var counts = {};
+    counts[X] = 0;
+    counts[O] = 0;
+    counts[E] = 0;
+
+    for (var i = 0; i < 3; i++) {
+        counts[grid[i][i]]++;
+    }
+
+    return counts;
+}
+
+function findEmptyInLeftDiagonal(grid) {
+    for (var i = 0; i < 3; i++) {
+        if (grid[i][i] === E) {
+            return {r: i, c: i};
+        }
+    }
+    return null;
+}
+
+function countInRightDiagonal(grid, player) {
+    var counts = {};
+    counts[X] = 0;
+    counts[O] = 0;
+    counts[E] = 0;
+
+    for (var i = 0; i < 3; i++) {
+        counts[grid[2 - i][i]]++;
+    }
+
+    return counts;
+}
+
+function findEmptyInRightDiagonal(grid) {
+    for (var i = 0; i < 3; i++) {
+        if (grid[2 - i][i] === E) {
+            return {r: 2 - i, c: i};
+        }
+    }
+    return null;
+}
+{% endhighlight %}
+
+<p class="caption">
+Then, we implement a "findTwoInARow" function, which returns the first cell
+which will complete or a block a series of two cells.
+</p>
+
+{% highlight javascript %}
+function findTwoInARow (grid, player) {
+    for (var r = 0; r < 3; r++) {
+        var counts = countInRow(grid, r);
+        if (counts[player] === 2 && counts[E] === 1) {
+            return {"r": r, "c": findEmptyInRow(grid, r)};
+        }
+    }
+
+    for (var c = 0; c < 3; c++) {
+        var counts = countInColumn(grid, c);
+        if (counts[player] === 2 && counts[E] === 1) {
+            return {"r": findEmptyInColumn(grid, c), "c": c};
+        }
+    }
+
+    var counts = countInLeftDiagonal(grid);
+    if (counts[player] === 2 && counts[E] === 1) {
+        return findEmptyInLeftDiagonal(grid);
+    }
+
+    var counts = countInRightDiagonal(grid);
+    if (counts[player] === 2 && counts[E] === 1) {
+        return findEmptyInRightDiagonal(grid);
+    }
+
+    return null;
+}
+{% endhighlight %}
+
+<p class="caption">
+Then, our makeMove function can be changed to the following.
+</p>
+
+{% highlight javascript %}
+function makeMove(grid, player) {
+    var pos = findTwoInARow(grid, player);
+
+    if (pos != null) {
+        return pos;
+    }
+
+    pos = findTwoInARow(grid, -player);
+
+    if (pos != null) {
+        return pos;
+    }
+
+    return pickRandomly(grid);
+}
+{% endhighlight %}
+
+<button class="show">Show Answer</button>
+</div>
+
+Now, if you play against the AI, it actually has some chance of winning.
+However, you can still sometimes trick it and win. To realize an "Advanced"
+player, we pull out one last trick, which is that the center cell is more
+important that the corners, which are themselves more important than the
+edges. How do we do this?
+
+<div class="hidden">
+{% highlight javascript %}
+function makeMove(grid, player) {
+    var pos = findTwoInARow(grid, player);
+
+    if (pos != null) {
+        return pos;
+    }
+
+    pos = findTwoInARow(grid, -player);
+
+    if (pos != null) {
+        return pos;
+    }
+
+    if (grid[1][1] === E) {
+        return {"r": 1, "c": 1};
+    }
+
+    for (var r = 0; r < 3; r += 2) {
+        for (var c = 0; c < 3; c += 2) {
+            if (grid[r][c] === E) {
+                return {"r": r, "c": c};
+            }
+        }
+    }
+
+    return pickRandomly(grid);
+}
+{% endhighlight %}
+<p class="caption">
+Instead of immediately falling back to picking randomly, we first see if the
+center and then the four corners are empty, and choose the first empty cell
+we find.
+</p>
+<button class="show">Show Answer</button>
+</div>
+
+Now, with this AI, pretty much every game will end in a draw.

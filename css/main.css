@@ -192,3 +192,17 @@ a:visited { color: #a0a; }
   margin-top: 0px;
   margin-bottom: 10px;
 }
+
+.caption td {
+  border: 1px solid black;
+  padding: 10px;
+}
+
+.caption th {
+}
+
+table.caption {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
